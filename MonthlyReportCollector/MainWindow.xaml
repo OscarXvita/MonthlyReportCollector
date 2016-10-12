@@ -1,0 +1,62 @@
+﻿<Window x:Class="MonthlyReportCollector.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MonthlyReportCollector"
+        mc:Ignorable="d"
+        Title="MSP Report Collector" Height="480" Width="800" MinWidth="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid  Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition MinWidth="50" Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" x:Name="BannerGrid" Background="#B4009E" >
+                <TextBlock Foreground="White" Margin="10" FontSize="24" VerticalAlignment="Center" Text="Microsoft Student Partners" FontFamily="Microsoft YaHei UI Light"/>
+            </Grid>
+            <Border Grid.ColumnSpan="2" BorderBrush="#B4009E" HorizontalAlignment="Stretch" VerticalAlignment="Top" BorderThickness="0,2,1,0"/>
+            <Border Grid.ColumnSpan="2" BorderBrush="#B4009E" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,0,2,0"/>
+            <TextBlock Grid.Column="1" Margin="10" Foreground="#B4009E" FontSize="24" VerticalAlignment="Center" Text="Report Collection Tool" FontFamily="Segoe UI" />
+            <Border Grid.ColumnSpan="2" BorderBrush="#B4009E" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" BorderThickness="0,2,1,0"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10">
+            <Label x:Name="label" Content="MSP 新版月报整理统计工具" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btn_SelPath" Content="选择整理路径" HorizontalAlignment="Left" Margin="485,69,0,0" VerticalAlignment="Top" Width="92" Height="24"/>
+            <Label x:Name="label1" Content="请先使用编写好的Outlook VBA工具下载好所有的报表附件，并放置在同一个文件夹里" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="txt_Path" HorizontalAlignment="Left" Height="23" Margin="17,70,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="453"/>
+            <Label x:Name="label2" Content="操作选项" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top" Width="101"/>
+            <Button x:Name="btn_Migrate" Content="合成到总表" HorizontalAlignment="Left" Margin="17,162,0,0" VerticalAlignment="Top" Width="147" Height="44"/>
+            <Button x:Name="btn_CheckMissing" Content="漏交报告检测" HorizontalAlignment="Left" Margin="410,162,0,0" VerticalAlignment="Top" Width="140" Height="44"/>
+            <Label x:Name="label3" Content="辅助功能" HorizontalAlignment="Left" Margin="239,131,0,0" VerticalAlignment="Top" Width="95"/>
+            <Button x:Name="btn_RemindAll" Content="批量提醒漏交" HorizontalAlignment="Left" Margin="240,215,0,0" VerticalAlignment="Top" Width="145" Height="45" RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-0.169"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Button.RenderTransform>
+            </Button>
+            <Button x:Name="btn_DBManageMent" Content="总名单维护" HorizontalAlignment="Left" Margin="239,162,0,0" VerticalAlignment="Top" Width="146" Height="44"/>
+            <Button x:Name="button1_Copy" Content="补交报表" HorizontalAlignment="Left" Margin="18,216,0,0" VerticalAlignment="Top" Width="147" Height="44"/>
+            <Image x:Name="MS_Logo" Source="pack://application:,,,/Assets/microsoft-gray.png" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" />
+            <Image x:Name="MSP_Logo" Source="pack://application:,,,/Assets/msp.png" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="50" Margin="0,0,0,0" />
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="60,0,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Microsoft " FontSize="15"></TextBlock>
+                    <TextBlock  Text="Student Partners" FontSize="15" Foreground="#B4009E"></TextBlock>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+
+
+    </Grid>
+</Window>
