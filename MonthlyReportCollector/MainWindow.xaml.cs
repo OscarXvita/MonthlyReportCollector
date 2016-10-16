@@ -32,6 +32,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,7 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using OfficeOpenXml;
 using System.Diagnostics;
+using System.Threading;
 
 namespace MonthlyReportCollector
 {
@@ -73,6 +75,7 @@ namespace MonthlyReportCollector
         public MainWindow()
         {
             InitializeComponent();
+          
         }
 
         ProcessingWindow windows = new ProcessingWindow();
@@ -197,33 +200,31 @@ namespace MonthlyReportCollector
                              // output the data in column 2
                 try
                 {
-                    MonthlyReport rp = new MonthlyReport
-                    {
-                        Id = (string)ws.Cells[row, 1].Value,
-                        Name = (string)ws.Cells[row, 2].Value,
-                        Sex = (string)ws.Cells[row, 3].Value,
-                        Team = (string)ws.Cells[row, 4].Value,
-                        Phone = (string)ws.Cells[row, 5].Value,
-                        Email = (string)ws.Cells[row, 6].Value,
-                        City = (string)ws.Cells[row, 7].Value,
-                        School = (string)ws.Cells[row, 8].Value,
-                        Major = (string)ws.Cells[row, 9].Value,
-                        Grade = (string)ws.Cells[row, 10].Value,
-                        BlogNum = (int)ws.Cells[row, 11].Value,
-                        BlogLink = (string)ws.Cells[row, 12].Value,
-                        SocialNum = (int)ws.Cells[row, 13].Value,
-                        SocialLink = (string)ws.Cells[row, 14].Value,
-                        Retweets = (int)ws.Cells[row, 15].Value,
-                        RtLink = (string)ws.Cells[row, 16].Value,
-                        PostAccepted = (int)ws.Cells[row, 17].Value,
-                        PostLink = (string)ws.Cells[row, 18].Value,
-                        WindowsApps = (int)ws.Cells[row, 19].Value,
-                        WaLink = (string)ws.Cells[row, 20].Value,
-                        ActivityJoinNum = (int)ws.Cells[row, 21].Value,
-                        AhLink = (string)ws.Cells[row, 22].Value,
-                        ActivityHeldNum = (int)ws.Cells[row, 23].Value,
-                        AjNum = (string)ws.Cells[row, 24].Value
-                    };
+                    MonthlyReport rp = new MonthlyReport();
+                    rp.Id = (string)ws.Cells[row, 1].Value;
+                    rp.Name = (string)ws.Cells[row, 2].Value;
+                    rp.Sex = (string)ws.Cells[row, 3].Value;
+                    rp.Team = (string)ws.Cells[row, 4].Value;
+                    rp.Phone = (string)ws.Cells[row, 5].Value;
+                    rp.Email = (string)ws.Cells[row, 6].Value;
+                    rp.City = (string)ws.Cells[row, 7].Value;
+                    rp.School = (string)ws.Cells[row, 8].Value;
+                    rp.Major = (string)ws.Cells[row, 9].Value;
+                    rp.Grade = (string)ws.Cells[row, 10].Value;
+                    rp.BlogNum = ws.Cells[row, 11].Value.ToString();
+                    rp.BlogLink = (string)ws.Cells[row, 12].Value;
+                    rp.SocialNum = ws.Cells[row, 13].Value.ToString();
+                    rp.SocialLink = (string)ws.Cells[row, 14].Value;
+                    rp.Retweets = ws.Cells[row, 15].Value.ToString();
+                    rp.RtLink = (string)ws.Cells[row, 16].Value;
+                    rp.PostAccepted =ws.Cells[row, 17].Value.ToString();
+                    rp.PostLink = (string)ws.Cells[row, 18].Value;
+                    rp.WindowsApps =ws.Cells[row, 19].Value.ToString();
+                    rp.WaLink = (string)ws.Cells[row, 20].Value;
+                    rp.ActivityJoinNum = ws.Cells[row, 21].Value.ToString();
+                    rp.AhLink = (string)ws.Cells[row, 22].Value;
+                    rp.ActivityHeldNum = ws.Cells[row, 23].Value.ToString();
+                    rp.AjNum = (string)ws.Cells[row, 24].Value;
                     reportList.Add(rp);
                 }
                 catch (Exception ex)
@@ -252,8 +253,7 @@ namespace MonthlyReportCollector
 
         public void DoAllMigrate()
         {
-
-           
+         
             if (!Directory.Exists(this.txt_Path.Text + "\\月度总报表"))//如果不存在就创建文件夹
             {
 
@@ -280,14 +280,15 @@ namespace MonthlyReportCollector
                 str.CopyTo(output);
             }
             //
-            
+           
             ErrorLog = "";
             var files = Directory.GetFiles(this.txt_Path.Text, "*.xlsx", SearchOption.TopDirectoryOnly);
-
+            ProcessingWindow wind=new ProcessingWindow();
+            wind.Show();
             foreach (var file in files)
             {
                 MigrateToOne(file);
-               
+               // Thread.Sleep(5000);
             }
             List<MonthlyReport> sortedList = reportList.OrderBy(o => o.Id).ToList();
             FileInfo mainReport = new FileInfo(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() + "月总报表.xlsx");
@@ -296,7 +297,8 @@ namespace MonthlyReportCollector
                 ExcelWorksheet ws = mainExcel.Workbook.Worksheets[1];
                 int row = 2; //The item description
                              // output the data in column 2
-              
+
+
                 foreach (var report in sortedList )
                 {
                     ws.Cells[row, 1].Value = report.Id;
@@ -325,13 +327,23 @@ namespace MonthlyReportCollector
                     ws.Cells[row, 24].Value = report.ActivityJoinNum;
                     row++;
                 }
+
+                // set some custom property values
+               mainExcel.Workbook.Properties.SetCustomPropertyValue("Checked by", "MSP Report Collection Tool");
+                mainExcel.Workbook.Properties.SetCustomPropertyValue("AssemblyName", "MSP CHINA");
+                // save our new workbook and we are done!
+                mainExcel.Save();
+
             }
+            sortedList.Clear();
+            reportList.Clear();
+            wind.Close();
             //清空LOG List
             //检查总表是否存在
             //存在即删除重建，不存在就建立
             //Foreach 遍历文件
             //对每一个文件执行Migrate
-
+            MessageBox.Show("合成到主表操作完成！", "操作完成", MessageBoxButton.OK, MessageBoxImage.Information);
             //显示统计和错误信息
         }
         public void PostDeadLineSubmit()

@@ -19,19 +19,19 @@ namespace MonthlyReportCollector
         public string School { get; set; }
         public string Major { get; set; }
         public string Grade { get; set; }
-        public int BlogNum { get; set; }
+        public string BlogNum { get; set; }
         public string BlogLink { get; set; }
-        public int SocialNum { get; set; }
+        public string SocialNum { get; set; }
         public string SocialLink { get; set; }
-        public int Retweets { get; set; }
+        public string Retweets { get; set; }
         public string RtLink { get; set; }
-        public int PostAccepted { get; set; }
+        public string PostAccepted { get; set; }
         public string PostLink { get; set; }
-        public int WindowsApps { get; set; }
+        public string WindowsApps { get; set; }
         public string WaLink { get; set; }
-        public int ActivityHeldNum { get; set; }
+        public string ActivityHeldNum { get; set; }
         public string AhLink { get; set; }
-        public int ActivityJoinNum { get; set; }
+        public string ActivityJoinNum { get; set; }
         public string AjNum { get; set; }
 
 
