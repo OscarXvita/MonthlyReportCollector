@@ -1,0 +1,16 @@
+﻿<Window x:Class="MonthlyReportCollector.ProcessingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MonthlyReportCollector"
+        mc:Ignorable="d"
+        Title="ProcessingWindow" Height="150" Width="300" WindowStyle="None" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+    <Grid>
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <TextBlock x:Name="processText" Text="正在处理中，请稍候..." MaxWidth="250" TextWrapping="Wrap" HorizontalAlignment="Center" ></TextBlock>
+            <ProgressBar Height="20" HorizontalAlignment="Stretch" Margin="10" IsIndeterminate="True" ></ProgressBar>
+            <Button x:Name="hide" Content="隐藏此窗口" Width="100" Visibility="Collapsed" Click="hide_Click"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

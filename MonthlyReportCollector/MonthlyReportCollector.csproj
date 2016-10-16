@@ -40,7 +40,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Ookii.Dialogs.Wpf">
-      <HintPath>E:\备用研究\Ookii.Dialogs.Wpf.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\迅雷下载\Ookii.Dialogs\Ookii.Dialogs.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -82,9 +82,16 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ProcessingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MonthlyReport.cs" />
+    <Compile Include="ProcessingWindow.xaml.cs">
+      <DependentUpon>ProcessingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -102,8 +109,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Assets\MSP新版月报模板.xls" />
-    <None Include="packages.config" />
+    <EmbeddedResource Include="Assets\MSP新版月报模板.xlsx" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

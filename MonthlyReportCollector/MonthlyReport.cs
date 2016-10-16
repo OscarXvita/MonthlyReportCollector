@@ -7,50 +7,33 @@ using System.Threading.Tasks;
 
 namespace MonthlyReportCollector
 {
-    class MonthlyReport
+    public class MonthlyReport
     {
-            string iD;
-            public string ID
-            {
-                get { return iD; }
-                set
-                {
-                    if (!Regex.IsMatch(ID, @"[0-9]{4}"))
-                    {
-                        throw new ArgumentException("ID无效或为空！");
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Sex { get; set; }
+        public string Team { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string City { get; set; }
+        public string School { get; set; }
+        public string Major { get; set; }
+        public string Grade { get; set; }
+        public int BlogNum { get; set; }
+        public string BlogLink { get; set; }
+        public int SocialNum { get; set; }
+        public string SocialLink { get; set; }
+        public int Retweets { get; set; }
+        public string RtLink { get; set; }
+        public int PostAccepted { get; set; }
+        public string PostLink { get; set; }
+        public int WindowsApps { get; set; }
+        public string WaLink { get; set; }
+        public int ActivityHeldNum { get; set; }
+        public string AhLink { get; set; }
+        public int ActivityJoinNum { get; set; }
+        public string AjNum { get; set; }
 
-                    }
-                    else
-                    {
-                        ID = iD;
-                    }
-                }
-            }
 
-            string Name;
-            string Sex;
-            string Team;
-            string Phone;
-            string Email;
-            string City;
-            string School;
-            string Major;
-            string Grade;
-            int BlogNum;
-            string BlogLink;
-            int SocialNum;
-            string SocialLink;
-            int Retweets;
-            string RTLink;
-            int PostAccepted;
-            string PostLink;
-            int WindowsApps;
-            string WALink;
-            int ActivityHeldNum;
-            string AHLink;
-            int ActivityJoinNum;
-            string AJNum;
-
-        
     }
 }

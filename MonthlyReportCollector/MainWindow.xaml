@@ -27,7 +27,8 @@
 
         <Grid Grid.Row="1" Margin="10">
             <Label x:Name="label" Content="MSP 新版月报整理统计工具" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
-            <Button x:Name="btn_SelPath" Content="选择整理路径" HorizontalAlignment="Left" Margin="485,69,0,0" VerticalAlignment="Top" Width="92" Height="24" Click="btn_SelPath_Click"/>
+            <Button x:Name="btn_SelPath" Content="选择路径" Width="auto" HorizontalAlignment="Left" Margin="485,69,0,0" VerticalAlignment="Top" Height="24" Click="btn_SelPath_Click"/>
+            <Button x:Name="btn_Verify" Content="验证月报文件名合法性" Width="auto" HorizontalAlignment="Left" Margin="555,69,0,0" VerticalAlignment="Top" Height="24" Click="btn_Verify_Click"/>
             <Label x:Name="label1" Content="请先使用编写好的Outlook VBA工具下载好所有的报表附件，并放置在同一个文件夹里" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="txt_Path" HorizontalAlignment="Left" Height="23" Margin="17,70,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="453" IsHitTestVisible="False" TextChanged="txt_Path_TextChanged"/>
             <Label x:Name="label2" Content="操作选项" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top" Width="101"/>
