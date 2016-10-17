@@ -198,33 +198,34 @@ namespace MonthlyReportCollector
                 ExcelWorksheet ws = package.Workbook.Worksheets[1];
                 int row = 2; //The item description
                              // output the data in column 2
-                try
-                {
-                    MonthlyReport rp = new MonthlyReport();
-                    rp.Id = (string)ws.Cells[row, 1].Value;
-                    rp.Name = (string)ws.Cells[row, 2].Value;
-                    rp.Sex = (string)ws.Cells[row, 3].Value;
-                    rp.Team = (string)ws.Cells[row, 4].Value;
-                    rp.Phone = (string)ws.Cells[row, 5].Value;
-                    rp.Email = (string)ws.Cells[row, 6].Value;
-                    rp.City = (string)ws.Cells[row, 7].Value;
-                    rp.School = (string)ws.Cells[row, 8].Value;
-                    rp.Major = (string)ws.Cells[row, 9].Value;
-                    rp.Grade = (string)ws.Cells[row, 10].Value;
-                    rp.BlogNum = ws.Cells[row, 11].Value.ToString();
-                    rp.BlogLink = (string)ws.Cells[row, 12].Value;
-                    rp.SocialNum = ws.Cells[row, 13].Value.ToString();
-                    rp.SocialLink = (string)ws.Cells[row, 14].Value;
-                    rp.Retweets = ws.Cells[row, 15].Value.ToString();
-                    rp.RtLink = (string)ws.Cells[row, 16].Value;
-                    rp.PostAccepted =ws.Cells[row, 17].Value.ToString();
-                    rp.PostLink = (string)ws.Cells[row, 18].Value;
-                    rp.WindowsApps =ws.Cells[row, 19].Value.ToString();
-                    rp.WaLink = (string)ws.Cells[row, 20].Value;
-                    rp.ActivityJoinNum = ws.Cells[row, 21].Value.ToString();
-                    rp.AhLink = (string)ws.Cells[row, 22].Value;
-                    rp.ActivityHeldNum = ws.Cells[row, 23].Value.ToString();
-                    rp.AjNum = (string)ws.Cells[row, 24].Value;
+                try {
+                    MonthlyReport rp = new MonthlyReport
+                    {
+                        Id = ws.Cells[3, 2].Value.ToString(),
+                        Name = ws.Cells[4, 2].Value.ToString(),
+                        Sex = ws.Cells[4, 4].Value.ToString(),
+                        Team = ws.Cells[4, 6].Value.ToString(),
+                        Phone = ws.Cells[5, 2].Value.ToString(),
+                        Email = ws.Cells[5, 4].Value.ToString(),
+                        City = ws.Cells[6, 2].Value.ToString(),
+                        School = ws.Cells[6, 4].Value.ToString(),
+                        Major = ws.Cells[6, 6].Value.ToString(),
+                        Grade = ws.Cells[5, 6].Value.ToString(),
+                        BlogNum = ws.Cells[7, 6].Value.ToString(),
+                        BlogLink = ws.Cells[8, 3].Value.ToString(),
+                        SocialNum = ws.Cells[9, 6].Value.ToString(),
+                        SocialLink = ws.Cells[10, 3].Value.ToString(),
+                        Retweets = ws.Cells[11, 6].Value.ToString(),
+                        RtLink = ws.Cells[12, 3].Value.ToString(),
+                        PostAccepted = ws.Cells[13, 6].Value.ToString(),
+                        PostLink = ws.Cells[14, 3].Value.ToString(),
+                        WindowsApps = ws.Cells[15, 6].Value.ToString(),
+                        WaLink = ws.Cells[16, 3].Value.ToString(),
+                        ActivityJoinNum = ws.Cells[17, 6].Value.ToString(),
+                        AhLink = ws.Cells[18, 3].Value.ToString(),
+                        ActivityHeldNum = ws.Cells[19, 6].Value.ToString(),
+                        AjNum = ws.Cells[20, 3].Value.ToString()
+                    };
                     reportList.Add(rp);
                 }
                 catch (Exception ex)
@@ -233,7 +234,7 @@ namespace MonthlyReportCollector
                     MessageBox.Show("处理文件：" + new FileInfo(file).Name + "发生问题！，请检查文件！");
                     this.WriteLine(ex.Message);
                 }
-                
+
             }//end of using
 
 
@@ -249,7 +250,12 @@ namespace MonthlyReportCollector
         {
             ErrorLog = ErrorLog + something + "\n";
         }
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
 
+            Application.Current.Shutdown();
+        }
 
         public void DoAllMigrate()
         {
