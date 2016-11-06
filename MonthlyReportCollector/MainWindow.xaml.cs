@@ -185,54 +185,88 @@ namespace MonthlyReportCollector
         }
 
         List<MonthlyReport> reportList = new List<MonthlyReport>();
+
         /// <summary>
         /// 对于单个文件的行移动操作
         /// </summary>
         private void MigrateToOne(string file) //string file)
         {
             FileInfo report = new FileInfo(file);
+            Debug.WriteLine("Dealing with " + report.Name + "...");
             using (ExcelPackage package = new ExcelPackage(report))
             {
+                try
+                {
+                    // get the first worksheet in the workbook
+                    ExcelWorksheet ws = package.Workbook.Worksheets[1];
 
-                // get the first worksheet in the workbook
-                ExcelWorksheet ws = package.Workbook.Worksheets[1];
-                int row = 2; //The item description
-                             // output the data in column 2
-                try {
-                    MonthlyReport rp = new MonthlyReport
-                    {
-                        Id = Convert.ToString(ws.Cells[3, 2].Value),
-                        Name = Convert.ToString(ws.Cells[4, 2].Value),
-                        Sex = Convert.ToString(ws.Cells[4, 4].Value),
-                        Team = Convert.ToString(ws.Cells[4, 6].Value),
-                        Phone = Convert.ToString(ws.Cells[5, 2].Value),
-                        Email = Convert.ToString(ws.Cells[5, 4].Value),
-                        City = Convert.ToString(ws.Cells[6, 2].Value),
-                        School = Convert.ToString(ws.Cells[6, 4].Value),
-                        Major = Convert.ToString(ws.Cells[6, 6].Value),
-                        Grade = Convert.ToString(ws.Cells[5, 6].Value),
-                        BlogNum = Convert.ToString(ws.Cells[7, 6].Value),
-                        BlogLink = Convert.ToString(ws.Cells[8, 3].Value),
-                        SocialNum =Convert.ToString(ws.Cells[9, 6].Value),
-                        SocialLink = Convert.ToString(ws.Cells[10, 3].Value),
-                        Retweets =Convert.ToString( ws.Cells[11, 6].Value),
-                        RtLink = Convert.ToString(ws.Cells[12, 3].Value),
-                        PostAccepted = Convert.ToString(ws.Cells[13, 6].Value),
-                        PostLink = Convert.ToString(ws.Cells[14, 3].Value),
-                        WindowsApps = Convert.ToString(ws.Cells[15, 6].Value),
-                        WaLink = Convert.ToString(ws.Cells[16, 3].Value),
-                        ActivityJoinNum = Convert.ToString(ws.Cells[17, 6].Value),
-                        AhLink = Convert.ToString(ws.Cells[18, 3].Value),
-                        ActivityHeldNum = Convert.ToString(ws.Cells[19, 6].Value),
-                        AjNum = Convert.ToString(ws.Cells[20, 3].Value)
-                    };
+                    int row = 2; //The item description
+                    // output the data in column 2
+
+                    MonthlyReport rp = new MonthlyReport();
+                    rp.Id = Convert.ToString(ws.Cells[3, 2].Value);
+                    rp.Name = Convert.ToString(ws.Cells[4, 2].Value);
+                    rp.Sex = Convert.ToString(ws.Cells[4, 4].Value);
+                    rp.Team = Convert.ToString(ws.Cells[4, 6].Value);
+                    rp.Phone = Convert.ToString(ws.Cells[5, 2].Value);
+                    rp.Email = Convert.ToString(ws.Cells[5, 4].Value);
+                    rp.City = Convert.ToString(ws.Cells[6, 2].Value);
+                    rp.School = Convert.ToString(ws.Cells[6, 4].Value);
+                    rp.Major = Convert.ToString(ws.Cells[6, 6].Value);
+                    rp.Grade = Convert.ToString(ws.Cells[5, 6].Value);
+                    rp.BlogNum = Convert.ToString(ws.Cells[7, 6].Value);
+                    rp.BlogLink = Convert.ToString(ws.Cells[8, 3].Value);
+                    rp.SocialNum = Convert.ToString(ws.Cells[9, 6].Value);
+                    rp.SocialLink = Convert.ToString(ws.Cells[10, 3].Value);
+                    rp.Retweets = Convert.ToString(ws.Cells[11, 6].Value);
+                    rp.RtLink = Convert.ToString(ws.Cells[12, 3].Value);
+                    rp.PostAccepted = Convert.ToString(ws.Cells[13, 6].Value);
+                    rp.PostLink = Convert.ToString(ws.Cells[14, 3].Value);
+                    rp.WindowsApps = Convert.ToString(ws.Cells[15, 6].Value);
+                    rp.WaLink = Convert.ToString(ws.Cells[16, 3].Value);
+                    rp.ActivityJoinNum = Convert.ToString(ws.Cells[17, 6].Value);
+                    rp.AhLink = Convert.ToString(ws.Cells[18, 3].Value);
+                    rp.ActivityHeldNum = Convert.ToString(ws.Cells[19, 6].Value);
+                    rp.AjNum = Convert.ToString(ws.Cells[20, 3].Value);
+
                     reportList.Add(rp);
                 }
+                //try {
+                //    MonthlyReport rp = new MonthlyReport
+                //    {
+                //        Id = Convert.ToString(ws.Cells[3, 2].Value),
+                //        Name = Convert.ToString(ws.Cells[4, 2].Value),
+                //        Sex = Convert.ToString(ws.Cells[4, 4].Value),
+                //        Team = Convert.ToString(ws.Cells[4, 6].Value),
+                //        Phone = Convert.ToString(ws.Cells[5, 2].Value),
+                //        Email = Convert.ToString(ws.Cells[5, 4].Value),
+                //        City = Convert.ToString(ws.Cells[6, 2].Value),
+                //        School = Convert.ToString(ws.Cells[6, 4].Value),
+                //        Major = Convert.ToString(ws.Cells[6, 6].Value),
+                //        Grade = Convert.ToString(ws.Cells[5, 6].Value),
+                //        BlogNum = Convert.ToString(ws.Cells[7, 6].Value),
+                //        BlogLink = Convert.ToString(ws.Cells[8, 3].Value),
+                //        SocialNum =Convert.ToString(ws.Cells[9, 6].Value),
+                //        SocialLink = Convert.ToString(ws.Cells[10, 3].Value),
+                //        Retweets =Convert.ToString( ws.Cells[11, 6].Value),
+                //        RtLink = Convert.ToString(ws.Cells[12, 3].Value),
+                //        PostAccepted = Convert.ToString(ws.Cells[13, 6].Value),
+                //        PostLink = Convert.ToString(ws.Cells[14, 3].Value),
+                //        WindowsApps = Convert.ToString(ws.Cells[15, 6].Value),
+                //        WaLink = Convert.ToString(ws.Cells[16, 3].Value),
+                //        ActivityJoinNum = Convert.ToString(ws.Cells[17, 6].Value),
+                //        AhLink = Convert.ToString(ws.Cells[18, 3].Value),
+                //        ActivityHeldNum = Convert.ToString(ws.Cells[19, 6].Value),
+                //        AjNum = Convert.ToString(ws.Cells[20, 3].Value)
+                //    };
+                //    reportList.Add(rp);
+                //}
                 catch (Exception ex)
                 {   //异常
                     //记录异常信息到LOG List
-                    MessageBox.Show("处理文件：" + new FileInfo(file).Name + "发生问题！，请检查文件！");
-                    this.WriteLine(ex.Message);
+                    //MessageBox.Show("处理文件：" + new FileInfo(file).Name + "发生问题！，请手动检查文件！");
+                    
+                    this.WriteLine(report.Name);
                 }
 
             }//end of using
@@ -291,6 +325,7 @@ namespace MonthlyReportCollector
             var files = Directory.GetFiles(this.txt_Path.Text, "*.xlsx", SearchOption.TopDirectoryOnly);
             ProcessingWindow wind=new ProcessingWindow();
             wind.Show();
+            
             foreach (var file in files)
             {
                 MigrateToOne(file);
@@ -351,7 +386,48 @@ namespace MonthlyReportCollector
             //对每一个文件执行Migrate
             MessageBox.Show("合成到主表操作完成！", "操作完成", MessageBoxButton.OK, MessageBoxImage.Information);
             //显示统计和错误信息
+            if (ErrorLog != "")
+            {
+                MessageBox.Show("合成过程中存在问题的文件有：\n"+ErrorLog+"\n文件可能存在问题导致无法读取，为确保统计数据完整，请手动添加该表中的数据", "需要进一步处理", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
+
+        private void btnBackgroundWorker_Click(object sender, EventArgs e)
+        {
+            progressBar.Value = 0;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            //当工作进度发生变化时执行的事件处理方法  
+            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            //当事件处理完毕后执行的方法  
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            worker.WorkerReportsProgress = true;//支持报告进度更新  
+            worker.WorkerSupportsCancellation = false;//不支持异步取消  
+            worker.RunWorkerAsync();//启动执行  
+            btnBackgroundWorker.Enabled = false;
+        }
+        //当事件处理完毕后执行的方法  
+        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            btnBackgroundWorker.Enabled = true;
+        }
+        //当工作进度发生变化时执行的事件处理方法  
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //可以在这个方法中与界面进行通讯  
+            progressBar.Value = e.ProgressPercentage;
+        }
+        //开始启动工作时执行的事件处理方法  
+        void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            int value = progressBar.Value;
+            while (value < progressBar.Maximum)
+            {
+                worker.ReportProgress(++value);//汇报进度  
+            }
+        }
+
         public void PostDeadLineSubmit()
         {
             //导入上次总表信息，及补交表格信息
