@@ -16,6 +16,7 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition MinWidth="50" Width="auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
+            <ProgressBar x:Name="progressBar"></ProgressBar>
             <Grid Grid.Column="0" x:Name="BannerGrid" Background="#B4009E" >
                 <TextBlock Foreground="White" Margin="10" FontSize="24" VerticalAlignment="Center" Text="Microsoft Student Partners" FontFamily="Microsoft YaHei UI Light"/>
             </Grid>
