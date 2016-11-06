@@ -393,40 +393,7 @@ namespace MonthlyReportCollector
         }
 
 
-        private void btnBackgroundWorker_Click(object sender, EventArgs e)
-        {
-            progressBar.Value = 0;
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            //当工作进度发生变化时执行的事件处理方法  
-            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            //当事件处理完毕后执行的方法  
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-            worker.WorkerReportsProgress = true;//支持报告进度更新  
-            worker.WorkerSupportsCancellation = false;//不支持异步取消  
-            worker.RunWorkerAsync();//启动执行  
-            btnBackgroundWorker.Enabled = false;
-        }
-        //当事件处理完毕后执行的方法  
-        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            btnBackgroundWorker.Enabled = true;
-        }
-        //当工作进度发生变化时执行的事件处理方法  
-        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //可以在这个方法中与界面进行通讯  
-            progressBar.Value = e.ProgressPercentage;
-        }
-        //开始启动工作时执行的事件处理方法  
-        void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            int value = progressBar.Value;
-            while (value < progressBar.Maximum)
-            {
-                worker.ReportProgress(++value);//汇报进度  
-            }
-        }
+    
 
         public void PostDeadLineSubmit()
         {
