@@ -75,8 +75,9 @@ namespace MonthlyReportCollector
         public MainWindow()
         {
             InitializeComponent();
-          
+
         }
+
         public BackgroundWorker worker = new BackgroundWorker();
         ProcessingWindow windows = new ProcessingWindow();
 
@@ -225,9 +226,9 @@ namespace MonthlyReportCollector
                     rp.WindowsApps = Convert.ToString(ws.Cells[15, 6].Value);
                     rp.WaLink = Convert.ToString(ws.Cells[16, 3].Value);
                     rp.ActivityJoinNum = Convert.ToString(ws.Cells[17, 6].Value);
-                    rp.AhLink = Convert.ToString(ws.Cells[18, 3].Value);
+                    rp.AhLink = Convert.ToString(ws.Cells[20, 3].Value);
                     rp.ActivityHeldNum = Convert.ToString(ws.Cells[19, 6].Value);
-                    rp.AjNum = Convert.ToString(ws.Cells[20, 3].Value);
+                    rp.AjLink = Convert.ToString(ws.Cells[18, 3].Value);
 
                     reportList.Add(rp);
                 }
@@ -262,14 +263,18 @@ namespace MonthlyReportCollector
                 //    reportList.Add(rp);
                 //}
                 catch (Exception ex)
-                {   //异常
+                {
+                    //异常
                     //记录异常信息到LOG List
                     //MessageBox.Show("处理文件：" + new FileInfo(file).Name + "发生问题！，请手动检查文件！");
-                    
-                    this.WriteLine(report.Name);
-                }
 
-            }//end of using
+                     this.WriteLine(report.Name);
+               
+                      MoveProblemFiles(file);
+                
+            }
+
+            } //end of using
 
 
 
@@ -280,10 +285,12 @@ namespace MonthlyReportCollector
 
 
         public string ErrorLog;
+
         private void WriteLine(string something)
         {
             ErrorLog = ErrorLog + something + "\n";
         }
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
@@ -293,8 +300,8 @@ namespace MonthlyReportCollector
 
         public void DoAllMigrate()
         {
-         
-            if (!Directory.Exists(this.txt_Path.Text + "\\月度总报表"))//如果不存在就创建文件夹
+
+            if (!Directory.Exists(this.txt_Path.Text + "\\月度总报表")) //如果不存在就创建文件夹
             {
 
                 try
@@ -314,150 +321,18 @@ namespace MonthlyReportCollector
 
             }
             var filename = "MSP新版月报模板.xlsx";
-            Stream str = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("MonthlyReportCollector.Assets." + filename);
-            using (Stream output = File.Create(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() + "月总报表.xlsx"))
+            Stream str =
+                System.Reflection.Assembly.GetExecutingAssembly()
+                    .GetManifestResourceStream("MonthlyReportCollector.Assets." + filename);
+            using (
+                Stream output =
+                    File.Create(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() +
+                                "月总报表.xlsx"))
             {
                 str.CopyTo(output);
             }
             //
-           
-            ErrorLog = "";
-            var files = Directory.GetFiles(this.txt_Path.Text, "*.xlsx", SearchOption.TopDirectoryOnly);
-            ProcessingWindow wind=new ProcessingWindow();
-            wind.Show();
-            
-            foreach (var file in files)
-            {
-                MigrateToOne(file);
-               // Thread.Sleep(5000);
-            }
-            List<MonthlyReport> sortedList = reportList.OrderBy(o => o.Id).ToList();
-            FileInfo mainReport = new FileInfo(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() + "月总报表.xlsx");
-            using (ExcelPackage mainExcel = new ExcelPackage(mainReport))
-            {
-                ExcelWorksheet ws = mainExcel.Workbook.Worksheets[1];
-                int row = 2; //The item description
-                             // output the data in column 2
 
-
-                foreach (var report in sortedList )
-                {
-                    ws.Cells[row, 1].Value = report.Id;
-                    ws.Cells[row, 2].Value = report.Name;
-                    ws.Cells[row, 3].Value = report.Sex;
-                    ws.Cells[row, 4].Value = report.Team;
-                    ws.Cells[row, 5].Value = report.Phone;
-                    ws.Cells[row, 6].Value = report.Email;
-                    ws.Cells[row, 7].Value = report.City;
-                    ws.Cells[row, 8].Value = report.School;
-                    ws.Cells[row, 9].Value = report.Major;
-                    ws.Cells[row, 10].Value = report.Grade;
-                    ws.Cells[row, 11].Value = report.BlogNum;
-                    ws.Cells[row, 12].Value = report.BlogLink;
-                    ws.Cells[row, 13].Value = report.SocialNum;
-                    ws.Cells[row, 14].Value = report.SocialLink;
-                    ws.Cells[row, 15].Value = report.Retweets;
-                    ws.Cells[row, 16].Value = report.RtLink;
-                    ws.Cells[row, 17].Value = report.PostAccepted;
-                    ws.Cells[row, 18].Value = report.PostLink;
-                    ws.Cells[row, 19].Value = report.WindowsApps;
-                    ws.Cells[row, 20].Value = report.WaLink;
-                    ws.Cells[row, 21].Value = report.ActivityHeldNum;
-                    ws.Cells[row, 22].Value = report.AhLink;
-                    ws.Cells[row, 23].Value = report.ActivityJoinNum;
-                    ws.Cells[row, 24].Value = report.ActivityJoinNum;
-                    row++;
-                }
-
-                // set some custom property values
-               mainExcel.Workbook.Properties.SetCustomPropertyValue("Checked by", "MSP Report Collection Tool");
-                mainExcel.Workbook.Properties.SetCustomPropertyValue("AssemblyName", "MSP CHINA");
-                // save our new workbook and we are done!
-                mainExcel.Save();
-
-            }
-            sortedList.Clear();
-            reportList.Clear();
-            wind.Close();
-            //清空LOG List
-            //检查总表是否存在
-            //存在即删除重建，不存在就建立
-            //Foreach 遍历文件
-            //对每一个文件执行Migrate
-            MessageBox.Show("合成到主表操作完成！", "操作完成", MessageBoxButton.OK, MessageBoxImage.Information);
-            //显示统计和错误信息
-            if (ErrorLog != "")
-            {
-                MessageBox.Show("合成过程中存在问题的文件有：\n"+ErrorLog+"\n文件可能存在问题导致无法读取，为确保统计数据完整，请手动添加该表中的数据", "需要进一步处理", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-
-        private void btnBackgroundWorker_Click(object sender, EventArgs e)
-        {
-            progressBar.Value = 0;
-            
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            //当工作进度发生变化时执行的事件处理方法  
-            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            //当事件处理完毕后执行的方法  
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-            worker.WorkerReportsProgress = true;//支持报告进度更新  
-            worker.WorkerSupportsCancellation = false;//不支持异步取消  
-            worker.RunWorkerAsync();//启动执行  
-           // btnBackgroundWorker.Enabled = false;
-        }
-
-        //当事件处理完毕后执行的方法  
-        void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            MessageBox.Show("合成到主表操作完成！", "操作完成", MessageBoxButton.OK, MessageBoxImage.Information);
-            //显示统计和错误信息
-            if (ErrorLog != "")
-            {
-                MessageBox.Show("合成过程中存在问题的文件有：\n" + ErrorLog + "\n文件可能存在问题导致无法读取，为确保统计数据完整，请手动添加该表中的数据", "需要进一步处理", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-         
-            // btnBackgroundWorker.Enabled = true;
-        }
-
-        //当工作进度发生变化时执行的事件处理方法  
-        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //可以在这个方法中与界面进行通讯  
-            progressBar.Value = e.ProgressPercentage;
-        }
-        //开始启动工作时执行的事件处理方法  
-        void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-            if (!Directory.Exists(this.txt_Path.Text + "\\月度总报表"))//如果不存在就创建文件夹
-            {
-
-                try
-                {
-                    Directory.CreateDirectory(this.txt_Path.Text + "\\月度总报表");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("无法写入新文件夹！请检查目录是否存在或有写入权限！" + Environment.NewLine + ex.Message);
-                }
-            }
-            //创建月度总表
-            if (File.Exists(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + DateTime.Now.Month.ToString() + "月总报表"))
-            //存在就删除重新生成咯
-            {
-                File.Delete(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + DateTime.Now.Month.ToString() + "月总报表");
-
-            }
-            var filename = "MSP新版月报模板.xlsx";
-            Stream str = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("MonthlyReportCollector.Assets." + filename);
-            using (Stream output = File.Create(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() + "月总报表.xlsx"))
-            {
-                str.CopyTo(output);
-            }
-            //
-            int i = 0;
             ErrorLog = "";
             var files = Directory.GetFiles(this.txt_Path.Text, "*.xlsx", SearchOption.TopDirectoryOnly);
             ProcessingWindow wind = new ProcessingWindow();
@@ -465,26 +340,20 @@ namespace MonthlyReportCollector
 
             foreach (var file in files)
             {
-                MigrateToOne(file);
-                i++;
-                worker.ReportProgress(i/(files.Length*2)*100);;
+                    MigrateToOne(file);
+               
                 // Thread.Sleep(5000);
             }
-
-
             List<MonthlyReport> sortedList = reportList.OrderBy(o => o.Id).ToList();
+            FileInfo mainReport =
+                new FileInfo(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() +
+                             "月总报表.xlsx");
 
-            #region Write Report
-
-            
-
-          
-            FileInfo mainReport = new FileInfo(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() + "月总报表.xlsx");
             using (ExcelPackage mainExcel = new ExcelPackage(mainReport))
             {
                 ExcelWorksheet ws = mainExcel.Workbook.Worksheets[1];
                 int row = 2; //The item description
-                             // output the data in column 2
+                // output the data in column 2
 
 
                 foreach (var report in sortedList)
@@ -512,10 +381,8 @@ namespace MonthlyReportCollector
                     ws.Cells[row, 21].Value = report.ActivityHeldNum;
                     ws.Cells[row, 22].Value = report.AhLink;
                     ws.Cells[row, 23].Value = report.ActivityJoinNum;
-                    ws.Cells[row, 24].Value = report.ActivityJoinNum;
+                    ws.Cells[row, 24].Value = report.AjLink;
                     row++;
-                    i++;
-                    worker.ReportProgress(i / (files.Length * 2) * 100); ;
                 }
 
                 // set some custom property values
@@ -533,83 +400,234 @@ namespace MonthlyReportCollector
             //存在即删除重建，不存在就建立
             //Foreach 遍历文件
             //对每一个文件执行Migrate
-
-#endregion  
-        }
-
-       
-        public void PostDeadLineSubmit()
-        {
-            //导入上次总表信息，及补交表格信息
-
-            //MigrateToOne()
-        }
-        /// <summary>
-        /// 检查本月漏交或新增名单，需要上月总表格做对比，导出漏交名单
-        /// </summary>
-        public void CheckMissingOrNewList()
-        {
-            //
-
-
-        }
-        /// <summary>
-        /// 提醒漏交一个月的同学
-        /// </summary>
-        public void RemindAllForget()
-        {
-
-        }
-        /// <summary>
-        /// 提醒连续两个月漏交报告的同学续交报告
-        /// </summary>
-        public void RemindDanger()
-        {
-
-        }
-
-
-
-        private void btn_SelPath_Click(object sender, RoutedEventArgs e)
-        {
-
-            VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
-            dialog.Description = "Please select a folder.";
-            dialog.UseDescriptionForTitle = true; // This applies to the Vista style dialog only, not the old dialog.
-
-
-            if ((bool)dialog.ShowDialog(this))
+            MessageBox.Show("合成到主表操作完成！", "操作完成", MessageBoxButton.OK, MessageBoxImage.Information);
+            //显示统计和错误信息
+            if (ErrorLog != "")
             {
-                this.txt_Path.Text = dialog.SelectedPath;
-
+                MessageBox.Show("合成过程中存在问题的文件有：\n" + ErrorLog + "\n文件可能存在问题导致无法读取，为确保统计数据完整，请手动添加该表中的数据", "需要进一步处理",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+    
 
-        private void btn_Migrate_Click(object sender, RoutedEventArgs e)
+
+private void btnBackgroundWorker_Click(object sender, EventArgs e)
+{
+    progressBar.Value = 0;
+
+    worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+    //当工作进度发生变化时执行的事件处理方法  
+    worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+    //当事件处理完毕后执行的方法  
+    worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+    worker.WorkerReportsProgress = true;//支持报告进度更新  
+    worker.WorkerSupportsCancellation = false;//不支持异步取消  
+    worker.RunWorkerAsync();//启动执行  
+                            // btnBackgroundWorker.Enabled = false;
+}
+
+//当事件处理完毕后执行的方法  
+void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+{
+    MessageBox.Show("合成到主表操作完成！", "操作完成", MessageBoxButton.OK, MessageBoxImage.Information);
+    //显示统计和错误信息
+    if (ErrorLog != "")
+    {
+        MessageBox.Show("合成过程中存在问题的文件有：\n" + ErrorLog + "\n文件可能存在问题导致无法读取，为确保统计数据完整，请手动添加该表中的数据", "需要进一步处理", MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+
+    // btnBackgroundWorker.Enabled = true;
+}
+
+//当工作进度发生变化时执行的事件处理方法  
+void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+{
+    //可以在这个方法中与界面进行通讯  
+    progressBar.Value = e.ProgressPercentage;
+}
+//开始启动工作时执行的事件处理方法  
+void worker_DoWork(object sender, DoWorkEventArgs e)
+{
+
+    if (!Directory.Exists(this.txt_Path.Text + "\\月度总报表"))//如果不存在就创建文件夹
+    {
+
+        try
         {
-            DoAllMigrate();
+            Directory.CreateDirectory(this.txt_Path.Text + "\\月度总报表");
         }
-
-        private void txt_Path_TextChanged(object sender, TextChangedEventArgs e)
+        catch (Exception ex)
         {
-            if (txt_Path.Text != "")
-            {
-                this.btn_Migrate.IsEnabled = true;
-            }
-            else
-            {
-                this.btn_Migrate.IsEnabled = false;
-            }
-        }
-
-        private void btn_Verify_Click(object sender, RoutedEventArgs e)
-        {
-            if (Directory.Exists(txt_Path.Text))
-                CheckAndMove();
-            else
-            {
-                MessageBox.Show("请选择合法的路径！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            MessageBox.Show("无法写入新文件夹！请检查目录是否存在或有写入权限！" + Environment.NewLine + ex.Message);
         }
     }
+    //创建月度总表
+    if (File.Exists(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + DateTime.Now.Month.ToString() + "月总报表"))
+    //存在就删除重新生成咯
+    {
+        File.Delete(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + DateTime.Now.Month.ToString() + "月总报表");
+
+    }
+    var filename = "MSP新版月报模板.xlsx";
+    Stream str = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("MonthlyReportCollector.Assets." + filename);
+    using (Stream output = File.Create(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() + "月总报表.xlsx"))
+    {
+        str.CopyTo(output);
+    }
+    //
+    int i = 0;
+    ErrorLog = "";
+    var files = Directory.GetFiles(this.txt_Path.Text, "*.xlsx", SearchOption.TopDirectoryOnly);
+    ProcessingWindow wind = new ProcessingWindow();
+    wind.Show();
+
+    foreach (var file in files)
+    {
+        MigrateToOne(file);
+        i++;
+        worker.ReportProgress(i / (files.Length * 2) * 100); ;
+        // Thread.Sleep(5000);
+    }
+
+
+    List<MonthlyReport> sortedList = reportList.OrderBy(o => o.Id).ToList();
+
+    #region Write Report
+
+
+
+
+    FileInfo mainReport = new FileInfo(this.txt_Path.Text + "\\月度总报表\\" + "MSP" + (DateTime.Now.AddMonths(-1).Month).ToString() + "月总报表.xlsx");
+    using (ExcelPackage mainExcel = new ExcelPackage(mainReport))
+    {
+        ExcelWorksheet ws = mainExcel.Workbook.Worksheets[1];
+        int row = 2; //The item description
+                     // output the data in column 2
+
+
+        foreach (var report in sortedList)
+        {
+            ws.Cells[row, 1].Value = report.Id;
+            ws.Cells[row, 2].Value = report.Name;
+            ws.Cells[row, 3].Value = report.Sex;
+            ws.Cells[row, 4].Value = report.Team;
+            ws.Cells[row, 5].Value = report.Phone;
+            ws.Cells[row, 6].Value = report.Email;
+            ws.Cells[row, 7].Value = report.City;
+            ws.Cells[row, 8].Value = report.School;
+            ws.Cells[row, 9].Value = report.Major;
+            ws.Cells[row, 10].Value = report.Grade;
+            ws.Cells[row, 11].Value = report.BlogNum;
+            ws.Cells[row, 12].Value = report.BlogLink;
+            ws.Cells[row, 13].Value = report.SocialNum;
+            ws.Cells[row, 14].Value = report.SocialLink;
+            ws.Cells[row, 15].Value = report.Retweets;
+            ws.Cells[row, 16].Value = report.RtLink;
+            ws.Cells[row, 17].Value = report.PostAccepted;
+            ws.Cells[row, 18].Value = report.PostLink;
+            ws.Cells[row, 19].Value = report.WindowsApps;
+            ws.Cells[row, 20].Value = report.WaLink;
+            ws.Cells[row, 21].Value = report.ActivityHeldNum;
+            ws.Cells[row, 22].Value = report.AhLink;
+            ws.Cells[row, 23].Value = report.ActivityJoinNum;
+            ws.Cells[row, 24].Value = report.ActivityJoinNum;
+            row++;
+            i++;
+            worker.ReportProgress(i / (files.Length * 2) * 100); ;
+        }
+
+        // set some custom property values
+        mainExcel.Workbook.Properties.SetCustomPropertyValue("Checked by", "MSP Report Collection Tool");
+        mainExcel.Workbook.Properties.SetCustomPropertyValue("AssemblyName", "MSP CHINA");
+        // save our new workbook and we are done!
+        mainExcel.Save();
+
+    }
+    sortedList.Clear();
+    reportList.Clear();
+    wind.Close();
+    //清空LOG List
+    //检查总表是否存在
+    //存在即删除重建，不存在就建立
+    //Foreach 遍历文件
+    //对每一个文件执行Migrate
+
+    #endregion
+}
+
+
+public void PostDeadLineSubmit()
+{
+    //导入上次总表信息，及补交表格信息
+
+    //MigrateToOne()
+}
+/// <summary>
+/// 检查本月漏交或新增名单，需要上月总表格做对比，导出漏交名单
+/// </summary>
+public void CheckMissingOrNewList()
+{
+    //
+
+
+}
+/// <summary>
+/// 提醒漏交一个月的同学
+/// </summary>
+public void RemindAllForget()
+{
+
+}
+/// <summary>
+/// 提醒连续两个月漏交报告的同学续交报告
+/// </summary>
+public void RemindDanger()
+{
+
+}
+
+
+
+private void btn_SelPath_Click(object sender, RoutedEventArgs e)
+{
+
+    VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
+    dialog.Description = "Please select a folder.";
+    dialog.UseDescriptionForTitle = true; // This applies to the Vista style dialog only, not the old dialog.
+
+
+    if ((bool)dialog.ShowDialog(this))
+    {
+        this.txt_Path.Text = dialog.SelectedPath;
+
+    }
+}
+
+private void btn_Migrate_Click(object sender, RoutedEventArgs e)
+{
+    DoAllMigrate();
+}
+
+private void txt_Path_TextChanged(object sender, TextChangedEventArgs e)
+{
+    if (txt_Path.Text != "")
+    {
+        this.btn_Migrate.IsEnabled = true;
+    }
+    else
+    {
+        this.btn_Migrate.IsEnabled = false;
+    }
+}
+
+private void btn_Verify_Click(object sender, RoutedEventArgs e)
+{
+    if (Directory.Exists(txt_Path.Text))
+        CheckAndMove();
+    else
+    {
+        MessageBox.Show("请选择合法的路径！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+}
+}
 }

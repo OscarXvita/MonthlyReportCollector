@@ -49,7 +49,7 @@
             <Button x:Name="btn_DBManageMent" Content="总名单维护" HorizontalAlignment="Left" Margin="239,162,0,0" VerticalAlignment="Top" Width="146" Height="44" IsEnabled="False"/>
             <Image x:Name="MS_Logo" Source="pack://application:,,,/Assets/microsoft-gray.png" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" />
             <Image x:Name="MSP_Logo" Source="pack://application:,,,/Assets/msp.png" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="50" Margin="0,0,0,0" />
-            <Label x:Name="appVer" Content="Verison 1.1r (BETA)" FontSize="14" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,15" Width="145" Height="35"/>
+            <Label x:Name="appVer" Content="Verison 1.6r (BETA)" FontSize="14" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,15" Width="145" Height="35"/>
 
             <Grid HorizontalAlignment="Left" VerticalAlignment="Bottom"  Margin="60,0,0,0">
                 <StackPanel Orientation="Horizontal">

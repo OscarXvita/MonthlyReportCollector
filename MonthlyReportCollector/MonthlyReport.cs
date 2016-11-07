@@ -32,7 +32,7 @@ namespace MonthlyReportCollector
         public string ActivityHeldNum { get; set; }
         public string AhLink { get; set; }
         public string ActivityJoinNum { get; set; }
-        public string AjNum { get; set; }
+        public string AjLink { get; set; }
 
 
     }
